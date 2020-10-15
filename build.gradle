@@ -1,0 +1,56 @@
+plugins {
+    id "com.google.protobuf" version "0.8.13"
+    id "java"
+}
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+
+    // https://mvnrepository.com/artifact/com.google.protobuf/protobuf-java
+    compile group: 'com.google.protobuf', name: 'protobuf-java', version: '3.12.2'
+
+    // https://mvnrepository.com/artifact/io.grpc/grpc-all
+    compile group: 'io.grpc', name: 'grpc-all', version: '1.32.2'
+
+    implementation group: 'com.salesforce.servicelibs', name: 'rxgrpc-stub', version: '1.0.1'
+
+    //RxJava 2
+    implementation 'io.reactivex.rxjava2:rxjava:2.2.20'
+}
+
+sourceSets {
+    main {
+        java {
+            srcDirs 'build/generated/source/proto/main/grpc'
+            srcDirs 'build/generated/source/proto/main/rxgrpc'
+            srcDirs 'build/generated/source/proto/main/java'
+        }
+    }
+}
+
+protobuf {
+    protoc {
+        artifact = 'com.google.protobuf:protoc:3.12.2'
+    }
+    plugins {
+        grpc {
+            artifact = 'io.grpc:protoc-gen-grpc-java:1.32.2'
+        }
+        rxgrpc {
+            artifact = 'com.salesforce.servicelibs:rxgrpc:1.0.1'
+        }
+    }
+
+    generateProtoTasks {
+        all()*.plugins {
+            grpc {}
+            rxgrpc {}
+        }
+    }
+}

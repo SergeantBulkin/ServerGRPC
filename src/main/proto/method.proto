@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "proto";
+option java_outer_classname = "MethodProto";
+
+service Method
+{
+  rpc GetMethodNumber(MethodRequest) returns (MethodResponse);
+}
+
+message MethodRequest
+{
+
+}
+
+message MethodResponse
+{
+  int32  responseCode  = 1;
+}

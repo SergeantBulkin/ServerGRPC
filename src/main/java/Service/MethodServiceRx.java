@@ -10,6 +10,6 @@ public class MethodServiceRx extends RxMethodGrpc.MethodImplBase
     @Override
     public Single<MethodResponse> getMethodNumber(Single<MethodRequest> request)
     {
-        return super.getMethodNumber(request);
+        return request.map(methodRequest -> MethodResponse.newBuilder().setResponseCode(1).build());
     }
 }

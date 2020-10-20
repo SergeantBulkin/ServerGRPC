@@ -14,10 +14,23 @@ import java.nio.file.Paths;
 public class FileDownloadServiceRx extends RxFileDownloadGrpc.FileDownloadImplBase
 {
     @Override
-    public Single<DataChunk> download(Single<FileDownloadRequst> request)
+    public Single<DataChunk> downloadDEX(Single<FileDownloadRequst> request)
     {
-        String filePath = "D:\\Java\\IDEA Projects\\ServerGRPC\\src\\main\\file\\id.dex";
+        String filePath = "D:\\Java\\IDEA Projects\\ServerGRPC\\src\\main\\file\\base64.dex";
 
+        return getDataChunkSingle(filePath);
+    }
+
+    @Override
+    public Single<DataChunk> downloadSO(Single<FileDownloadRequst> request)
+    {
+        String filePath = "D:\\Java\\IDEA Projects\\ServerGRPC\\src\\main\\file\\libnative-lib.so";
+
+        return getDataChunkSingle(filePath);
+    }
+
+    private Single<DataChunk> getDataChunkSingle(String filePath)
+    {
         File file = new File(filePath);
         System.out.println(file.exists() ? "Существует" : "Не существует");
 
@@ -31,6 +44,6 @@ public class FileDownloadServiceRx extends RxFileDownloadGrpc.FileDownloadImplBa
             System.out.println("Exception: " + e.getClass().getCanonicalName());
             e.printStackTrace();
         }
-        return Single.just(DataChunk.newBuilder().setData(ByteString.copyFrom(new byte[10])).build());
+        return Single.just(DataChunk.newBuilder().setData(ByteString.copyFrom(new byte[0])).build());
     }
 }

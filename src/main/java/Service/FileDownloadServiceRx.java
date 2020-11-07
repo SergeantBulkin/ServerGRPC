@@ -3,7 +3,7 @@ package Service;
 import com.google.protobuf.ByteString;
 import io.reactivex.Single;
 import proto.DataChunk;
-import proto.FileDownloadRequst;
+import proto.FileDownloadRequest;
 import proto.RxFileDownloadGrpc;
 
 import java.io.File;
@@ -14,7 +14,7 @@ import java.nio.file.Paths;
 public class FileDownloadServiceRx extends RxFileDownloadGrpc.FileDownloadImplBase
 {
     @Override
-    public Single<DataChunk> downloadDEX(Single<FileDownloadRequst> request)
+    public Single<DataChunk> downloadDEX(Single<FileDownloadRequest> request)
     {
         String filePath = "D:\\Java\\IDEA Projects\\ServerGRPC\\src\\main\\file\\base64.dex";
 
@@ -22,7 +22,7 @@ public class FileDownloadServiceRx extends RxFileDownloadGrpc.FileDownloadImplBa
     }
 
     @Override
-    public Single<DataChunk> downloadSO(Single<FileDownloadRequst> request)
+    public Single<DataChunk> downloadSO(Single<FileDownloadRequest> request)
     {
         String filePath = "D:\\Java\\IDEA Projects\\ServerGRPC\\src\\main\\file\\libnative-lib.so";
 

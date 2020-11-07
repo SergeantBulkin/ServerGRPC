@@ -1,8 +1,8 @@
 import Service.FileDownloadServiceRx;
 import Service.MethodService;
 import Service.MethodServiceRx;
-import io.grpc.Server;
-import io.grpc.ServerBuilder;
+import io.grpc.*;
+import model.CollectionInt;
 
 import java.io.IOException;
 
@@ -17,7 +17,7 @@ public class ServerRPC
                 .build();
         server.start();
 
-        System.out.println("Started at port " + server.getPort());
+        System.out.println("Started at port " + server.getPort() + "\n");
 
         server.awaitTermination();
     }

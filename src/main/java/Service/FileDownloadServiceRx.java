@@ -1,6 +1,8 @@
 package Service;
 
+import com.google.common.primitives.Bytes;
 import com.google.protobuf.ByteString;
+import io.reactivex.Flowable;
 import io.reactivex.Single;
 import proto.DataChunk;
 import proto.FileDownloadRequest;
@@ -10,11 +12,12 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.List;
 
 public class FileDownloadServiceRx extends RxFileDownloadGrpc.FileDownloadImplBase
 {
     @Override
-    public Single<DataChunk> downloadDEX(Single<FileDownloadRequest> request)
+    public Flowable<DataChunk> downloadDEX(Single<FileDownloadRequest> request)
     {
         String filePath = "D:\\Java\\IDEA Projects\\ServerGRPC\\src\\main\\file\\base64.dex";
 
@@ -22,14 +25,14 @@ public class FileDownloadServiceRx extends RxFileDownloadGrpc.FileDownloadImplBa
     }
 
     @Override
-    public Single<DataChunk> downloadSO(Single<FileDownloadRequest> request)
+    public Flowable<DataChunk> downloadSO(Single<FileDownloadRequest> request)
     {
         String filePath = "D:\\Java\\IDEA Projects\\ServerGRPC\\src\\main\\file\\libnative-lib.so";
 
         return getDataChunkSingle(filePath);
     }
 
-    private Single<DataChunk> getDataChunkSingle(String filePath)
+    private Flowable<DataChunk> getDataChunkSingle(String filePath)
     {
         File file = new File(filePath);
         System.out.println(file.exists() ? "Существует" : "Не существует");
@@ -37,13 +40,17 @@ public class FileDownloadServiceRx extends RxFileDownloadGrpc.FileDownloadImplBa
         try
         {
             byte[] filesArray = Files.readAllBytes(Paths.get(filePath));
+            List<Byte> list = Bytes.asList(filesArray);
             System.out.println("Size is " + filesArray.length/1024 + " kB");
-            return Single.just(DataChunk.newBuilder().setData(ByteString.copyFrom(filesArray)).build());
+            return Flowable.fromIterable(list)
+                    .buffer(128)
+                    .map(Bytes::toArray)
+                    .map(bytes -> DataChunk.newBuilder().setData(ByteString.copyFrom(bytes)).build());
         } catch (IOException e)
         {
             System.out.println("Exception: " + e.getClass().getCanonicalName());
             e.printStackTrace();
         }
-        return Single.just(DataChunk.newBuilder().setData(ByteString.copyFrom(new byte[0])).build());
+        return Flowable.just(DataChunk.newBuilder().build());
     }
 }
